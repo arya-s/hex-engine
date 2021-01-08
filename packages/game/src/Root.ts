@@ -1,54 +1,40 @@
+import * as THREE from "three";
 import {
-  Canvas,
-  useNewComponent,
   useChild,
   useType,
-  Vector,
-  Physics,
-  AudioContext,
-  useCanvasSize,
-} from "@hex-engine/2d";
-import Button from "./Button";
-import FPS from "./FPS";
-import Hex from "./Hex";
-import Scene from "./Scene";
-import Controls from "./Controls";
-import CustomDrawOrder from "./CustomDrawOrder";
-import Test from "./Test";
+  useDraw,
+  useNewComponent,
+  Renderer,
+} from "@hex-engine/3d";
+import Cube from "./Cube";
 
 export default function Root() {
   useType(Root);
 
-  const canvas = useNewComponent(() => Canvas({ backgroundColor: "white" }));
-  canvas.setPixelated(true);
-  canvas.fullscreen({ pixelZoom: 2 });
+  useNewComponent(() => Renderer({}));
 
-  useNewComponent(CustomDrawOrder);
+  const scene = useChild(() => new THREE.Scene());
+  const camera = useNewComponent(
+    () =>
+      new THREE.PerspectiveCamera(
+        75,
+        window.innerWidth / window.innerHeight,
+        0.1,
+        1000
+      )
+  );
 
-  useNewComponent(AudioContext);
-  useNewComponent(Physics.Engine);
-  useNewComponent(FPS);
-  useNewComponent(Controls);
+  const light = useNewComponent(
+    () => new THREE.HemisphereLight(0x404040, 0xffffff, 1.0)
+  );
 
-  const scene = useChild(Scene).rootComponent;
+  camera.position.z = 5;
 
-  useChild(() => {
-    Button({
-      calcPosition: (size) =>
-        new Vector(0, canvas.element.height)
-          .subtractYMutate(size.y / 2)
-          .addXMutate(size.x / 2)
-          .roundMutate(),
-      text: "Create Hex",
-      onClick: () => {
-        const randomX = Math.random() * canvas.element.width;
+  const cube = useChild(() => Cube());
+  scene.rootComponent.add(cube.rootComponent.mesh);
+  scene.rootComponent.add(light);
 
-        scene.useChild(() => Hex({ position: new Vector(randomX, 0) }));
-      },
-    });
+  useDraw((renderer) => {
+    renderer.render(scene.rootComponent, camera);
   });
-
-  const { canvasSize } = useCanvasSize();
-
-  useChild(() => Test(canvasSize.divide(2)));
 }

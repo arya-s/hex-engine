@@ -63,6 +63,7 @@ This project is separated as multiple packages which you can find in the _packag
 | Folder      | Description |
 | ----------- | ----------- |
 | `2d`        | Provides primitives for making a 2D game. This is published on npm as `@hex-engine/2d`. |
+| `3d`        | Provides primitives for making a 3D game. This is published on npm as `@hex-engine/3d`. |
 | `core`      | Core Entity and Component system. This is published on npm as `@hex-engine/core`. |
 | `create`    | CLI to create a boilerplate project. This is published on npm as `create-hex-engine-game`. |
 | `game`      | Example game built with with Hex Engine. This is not published on npm. |

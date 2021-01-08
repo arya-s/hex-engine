@@ -2,6 +2,7 @@
   "private": true,
   "workspaces": [
     "packages/2d",
+    "packages/3d",
     "packages/core",
     "packages/create",
     "packages/game",
